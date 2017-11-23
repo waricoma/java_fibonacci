@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="etc/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="etc/js/Chart.bundle.js"></script>
+    <title>Consideration</title>
+</head>
+<body>
+    <h1>考察</h1>
+
+    <p id="mokuji"></p>
+    <h3>目次</h3>
+    <p>
+        ・
+        <a href="#katei">
+            過程
+        </a>
+    </p>
+    <p>
+        ・
+        <a href="#zakkuri">
+            ざっくり
+        </a>
+    </p>
+    <p>
+        ・
+        <a href="#kido">
+            起動方法等
+        </a>
+    </p>
+    <p>
+        ・
+        <a href="#omake">
+            おまけ
+        </a>
+    </p>
+
+    <hr>
+
+    <p id="katei"></p>
+    <h3>過程</h3>
+    <p>
+        自分が手作業でフィボナッチ数列を求めるとき…
+    </p>
+    <p>
+        1つ前と２つ前の和をひたすら計算する
+    </p>
+    <p>
+        → N番目のフィボナッチ数は(N-1)番目と(N-2)番目の和
+    </p>
+    <p>
+        これを自動化すれば完成すると思い…
+    </p>
+    <pre>
+        long[] fibonacci_array = new long[ 70 ] ;
+
+        fibonacci_array[ 0 ] = 0 ; // 0 1 1 2 3 5 8 ...
+        fibonacci_array[ 1 ] = 1 ;
+
+        for ( int i=2; i<=70; i++ ) fibonacci_array[ i ] = fibonacci_array[ i-1 ] + fibonacci_array[ i-2 ] ;
+    </pre>
+    <p>
+        このようなコード(Java)が完成しました。( 条件1 )
+    </p>
+    <p>
+        これでの変数iは
+    </p>
+    <p>
+        「N番目のフィボナッチ数は(N-1)番目と(N-2)番目の和」
+    </p>
+    <p>
+        でのNになり、
+    </p>
+    <p>
+        1,2番目を求める際には「(N-1)番目と(N-2)番目」が
+    </p>
+    <p>
+        それぞれ負の値になるので、
+    </p>
+    <pre>
+        fibonacci_array[ 0 ] = 0 ; // 0 1 1 2 3 5 8 ...
+        fibonacci_array[ 1 ] = 1 ;
+    </pre>
+    <p>
+        最初から設定しました。
+    </p>
+    <p>
+        後は、
+    </p>
+    <p>
+        「N番目のフィボナッチ数は(N-1)番目と(N-2)番目の和」
+    </p>
+    <p>
+        という計算を70番目まで繰り返させます。( 条件2 : 1/2 )
+    </p>
+    <pre>
+        for ( int i=2; i&lt;70; i++ ) fibonacci_array[ i ] = fibonacci_array[ i-1 ] + fibonacci_array[ i-2 ] ;
+    </pre>
+    <hr>
+    <p>
+        続いて入出力の部分を作ります。
+    </p>
+    <p>
+        そしてこの時点で
+    </p>
+    <p>
+        計算と入出力で
+    </p>
+    <p>
+        大きく2つに機能が別れてきたので、
+    </p>
+    <p>
+        2つのクラスを用いることにしました。( 条件3 )
+    </p>
+    <p>
+        コードを遡りやすいのでファイルも分けます。( 条件4 )
+    </p>
+    <pre>
+        Fibonacci_maker.class
+        Fibonacci_viewer.class
+    </pre>
+    <p>
+        終了するまで入出力を繰り返すので、
+    </p>
+    <p>
+        フィボナッチ数列は
+    </p>
+    <p>
+        その都度計算しないで予め計算して
+    </p>
+    <p>
+        おいた方が良いと思いました。
+    </p>
+    <p>
+        ( 前述のフィボナッチ数列を記録している配列をそのまま用いる )
+    </p>
+    <pre>
+        // Fibonacci_maker.java
+
+        Fibonacci_viewer Fibonacci_viewer = new Fibonacci_viewer() ;
+
+        Fibonacci_viewer.index( fibonacci_array , new BufferedReader(new InputStreamReader(System.in)) );
+    </pre>
+    <p>
+        フィボナッチ数列などを渡す↓
+    </p>
+    <pre>
+        // Fibonacci_viewer.java
+
+        class Fibonacci_viewer {
+            static void index ( long[] fibonacci_array , BufferedReader br ) throws IOException {
+                // input
+                // output
+            }
+        }
+    </pre>
+    <p>
+        「終了するまで入出力を繰り返す」
+    </p>
+    <p>
+        ではwhile文…ではなく個人的に扱いやすいと思っている、
+    </p>
+    <p>
+        メソッドがメソッドを呼び出すことによる繰り返し
+    </p>
+    <p>
+        で実装しました。
+    </p>
+    <pre>
+        // Fibonacci_viewer.java
+
+        class Fibonacci_viewer {
+            static void index ( long[] fibonacci_array , BufferedReader br ) throws IOException {
+
+                // input
+                // output
+
+                index( fibonacci_array , br ) ;
+            }
+        }
+    </pre>
+    <p>
+        また、"quit" と "exit" で終了させます。
+    </p>
+    <p>
+        入力が "quit" と "exit" だったら ( 仕様3 )
+    </p>
+    <pre>
+        System.exit( 0 );
+    </pre>
+    <p>
+        を実行させます。( 仕様4 )
+    </p>
+    <p>
+        入力が数値ではなかったり1~70ではない
+    </p>
+    <p>
+        場合の処理も書きます。
+    </p>
+    <pre>
+        // Fibonacci_viewer.java
+
+        class Fibonacci_viewer {
+            static void index ( long[] fibonacci_array , BufferedReader br ) throws IOException {
+
+                System.out.println("Please type half-width numeric.( 1 ~ 70 ) *Typing 'quit' or 'exit' is exit.") ;
+
+                String asked_numeric = br.readLine() ;
+
+                if ( asked_numeric.equals("quit") || asked_numeric.equals("exit") ) {
+                    System.out.println( "See you." ) ;
+                    System.exit( 0 );
+                }
+
+                try {
+
+                    int asked_numeric_int = (int)Math.round( Double.parseDouble( asked_numeric ) ) ;
+
+                    if ( 0 < asked_numeric_int && asked_numeric_int <= 70 ) {
+
+                        // output
+
+                    } else {
+
+                        System.out.println("sorry... it's not 1 ~ 70.") ;
+
+                    }
+
+                } catch (NumberFormatException e) {
+
+                    System.out.println("sorry... it's not a half-width numeric.") ;
+
+                }
+
+                index( fibonacci_array , br ) ;
+            }
+        }
+    </pre>
+    <p>
+        いよいよ出力部分を作ります。
+    </p>
+    <p>
+        例えば12と入力されたときに
+    </p>
+    <pre>
+        12番目のフィボナッチ数: 89
+        12番目のまでのフィボナッチ数: 0 1 1 2 3 5 8 13 21 34 55 89
+    </pre>
+    <p>
+        のような出力を行いたいので、
+    </p>
+    <p>
+        出力する文字列を記録する変数を用意します。
+    </p>
+    <p>
+        また、「12番目のフィボナッチ数: 」
+    </p>
+    <p>
+        の12は前述のコードより、
+    </p>
+    <pre>
+        asked_numeric
+    </pre>
+    <p>
+        「12番目のフィボナッチ数: 89」
+    </p>
+    <p>
+        の89は
+    </p>
+    <pre>
+        fibonacci_array[ asked_numeric_int ]
+    </pre>
+    <p>
+        に記録されているため、
+    </p>
+    <pre>
+        String output_text  = asked_numeric + "番目のフィボナッチ数: " ;
+            　　output_text += String.valueOf( fibonacci_array[ asked_numeric_int ] ) ;
+    </pre>
+    <p>
+        となりました。
+    </p>
+    「12番目のまでのフィボナッチ数:」
+    の表示も一度改行させてほぼ同じように行います。
+    <pre>
+        output_text += "\n" + asked_numeric + "番目のまでのフィボナッチ数:" ;
+    </pre>
+    <p>
+        そして繰り返し文で ( 条件2 : 2/2 )
+    </p>
+    <pre>
+        // for( int i=0; i<=asked_numeric_int; i++ ) output_text += " " + String.valueOf( fibonacci_array[ i ] ) ;
+        i = 0 ;
+        while( i <= asked_numeric_int ){
+            output_text += " " + String.valueOf( fibonacci_array[ i ] )
+            i ++ ;
+        }
+    </pre>
+    <p>
+        半角スペースで区切って追記していきます。
+    </p>
+    <p>
+        出力します。( 仕様1 ) ( 仕様2 ) ( 仕様3 )
+    </p>
+    <pre>
+        System.out.println( output_text ) ;
+    </pre>
+    <p>
+        以上です。
+    </p>
+    <p>
+        ここまでお読みになって頂き有難う御座います。
+    </p>
+    <p>
+        <a href="#mokuji">
+            目次へ
+        </a>
+    </p>
+
+    <hr>
+
+    <p id="zakkuri"></p>
+    <h3>ざっくり</h3>
+    <p>
+        最初にフィボナッチ数列を配列で管理して、<br>
+        その配列を利用して入力された番号の<br>
+        値等を出力します。<br>
+        コードの読みやすや<br>
+        簡素さ<br>
+        などを今回は重視しました。<br>
+    </p>
+    <p>
+        <a href="#mokuji">
+            目次へ
+        </a>
+    </p>
+
+    <p id="kido"></p>
+    <h3>起動方法等</h3>
+    <p>
+        *恐らく Windows Mac 対応
+    </p>
+    <h4>1.</h4>
+    <p>
+        ダウンロードしたzipファイルを解凍します。
+    </p>
+    <h4>2.</h4>
+    <p>
+        ターミナルを開きます。
+    </p>
+    <h4>3.</h4>
+    <p>
+        cd コマンドで解凍したファイルの場所へ移動します。
+    </p>
+    <p>
+        <img src="etc/img/01.png">
+    </p>
+    <p>
+        <img src="etc/img/02.png">
+    </p>
+    <h4>4.</h4>
+    <pre>
+        javac Fibonacci_maker.java
+    </pre>
+    <p>
+        と入力(コピペ)しEnterを押します。
+    </p>
+    <p>
+        <img src="etc/img/03.png">
+    </p>
+    <h4>5.</h4>
+    <pre>
+        java Fibonacci_maker
+    </pre>
+    <p>
+        と入力(コピペ)しEnterを押します。
+    </p>
+    <p>
+        <img src="etc/img/04.png">
+    </p>
+    <p>
+        <img src="etc/img/05.png">
+    </p>
+    <p>
+        プログラムが実行されるかと思います。
+    </p>
+    <p>
+        <a href="#mokuji">
+            目次へ
+        </a>
+    </p>
+
+    <hr>
+
+    <p id="omake"></p>
+    <h2>Chart.js Test</h2>
+    <p>Included , Fibonacci</p>
+    <canvas id="graf" height="1000" width="1000"></canvas>
+    <p>
+        <a href="#mokuji">
+            目次へ
+        </a>
+    </p>
+
+    <script>
+
+    var fibonacciData = {
+        labels   : [ 0 , 1 , 2 ] ,
+        datasets : [
+            {
+                fillColor   : 'rgba( 0 , 0 , 102 , 0.5 )' ,
+                strokeColor : 'rgba( 0 , 0 , 102 , 1 )' ,
+                data : [ 0 , 0 , 1 ]
+            }
+        ]
+    } ;
+
+    for( var i=3; i<=15; i++ ){
+        fibonacciData.labels[ i ] = i ;
+        fibonacciData.datasets[ 0 ].data[ i ]  = fibonacciData.datasets[0].data[ i-1 ] ;
+        fibonacciData.datasets[ 0 ].data[ i ] += fibonacciData.datasets[0].data[ i-2 ] ;
+    }
+
+    fibonacciData.labels.shift();
+    fibonacciData.datasets[ 0 ].data.shift();
+
+    var write_graf = new Chart( $('#graf')[0].getContext('2d') ).Bar( fibonacciData );
+
+    </script>
+
+</body>
+</html>
